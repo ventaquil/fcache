@@ -1,0 +1,71 @@
+name: Rust
+
+env:
+  CARGO_TERM_COLOR: always
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/*.yml"
+      - "Cargo.toml"
+      - "examples/**.rs"
+      - "src/**.rs"
+      - "tests/**.rs"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/*.yml"
+      - "Cargo.toml"
+      - "examples/**.rs"
+      - "src/**.rs"
+      - "tests/**.rs"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    permissions:
+      checks: write
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+      - name: Setup Rust
+        run: |
+          rustup default nightly
+          rustup component add clippy rustfmt
+      - name: Format
+        run: |
+          cargo fmt --check --verbose
+          cargo clippy -- --deny clippy::cargo
+
+  build-and-test:
+    needs:
+      - lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        toolchain: [1.88.0, stable, nightly]
+        include:
+          - os: ubuntu-latest
+            os_name: Linux
+          - os: macos-latest
+            os_name: MacOS
+          - os: windows-latest
+            os_name: Windows
+    name: "Build and test (OS: ${{ matrix.os_name }}, Toolchain: ${{ matrix.toolchain }})"
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+      - name: Setup Rust
+        run: rustup default ${{ matrix.toolchain }}
+      - name: Build
+        run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose

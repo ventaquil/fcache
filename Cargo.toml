@@ -1,0 +1,20 @@
+[package]
+name = "fcache"
+version = "0.0.0"
+authors = ["Konrad Goławski <konrad@golawski.it>"]
+edition = "2024"
+rust-version = "1.88.0"
+description = "File caching library with lazy creation, automatic refresh, and callback-based initialization"
+repository = "https://github.com/ventaquil/fcache"
+license = "MIT"
+keywords = ["cache"]
+categories = ["filesystem"]
+
+[dependencies]
+tempfile = "3.15.0"
+thiserror = "2.0.12"
+
+[dev-dependencies]
+anyhow = "1.0.98"
+chrono = "0.4.41"
+signal-hook = "0.3.18"
