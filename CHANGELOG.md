@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Tips and tricks section with refresh patterns in documentation.
+
 ### Fixed
 
 - Cargo README configuration.

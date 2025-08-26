@@ -242,6 +242,73 @@
 //! - **File locking**: The built-in locking mechanism is **not** thread-safe and should not be relied upon for inter-thread synchronization (see [Locking and unlocking](#locking-and-unlocking) for more details).
 //! - **Concurrent access**: Users must implement their own synchronization using external mechanisms like [`Mutex`](std::sync::Mutex) or [`RwLock`](std::sync::RwLock) when multiple threads access the same file path, as the cache does not provide automatic protection against race conditions.
 //!
+//! # Tips and tricks
+//!
+//! ## Always refresh
+//!
+//! Use [`Duration::ZERO`] to ensure the cache is always refreshed.
+//!
+//! ```rust
+//! use std::time::Duration;
+//!
+//! use fcache::prelude::*;
+//!
+//! # fn wrapper() -> fcache::Result<()> {
+//! // Create a new cache instance
+//! let cache = fcache::new()?.with_refresh_interval(Duration::ZERO);
+//!
+//! // Get or create a cached file
+//! let mut cache_file = cache.get("hello.txt", |mut file| {
+//!     // Write data to the file
+//!     file.write_all(b"Hello, world!")?;
+//!     // Inform about the refresh
+//!     println!("Refreshing file");
+//!     Ok(())
+//! })?;
+//!
+//! // File refreshes on every access
+//! let file = cache_file.open()?;
+//! let file = cache_file.open()?;
+//! let file = cache_file.open()?;
+//! // ...
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! ## Never refresh
+//!
+//! Use [`Duration::MAX`] to disable automatic refresh. Use `force_refresh` for manual control.
+//!
+//! ```rust
+//! use std::time::Duration;
+//!
+//! use fcache::prelude::*;
+//!
+//! # fn wrapper() -> fcache::Result<()> {
+//! // Create a new cache instance
+//! let cache = fcache::new()?.with_refresh_interval(Duration::MAX);
+//!
+//! // Get or create a cached file
+//! let mut cache_file = cache.get("hello.txt", |mut file| {
+//!     // Write data to the file
+//!     file.write_all(b"Hello, world!")?;
+//!     // Inform about the refresh
+//!     println!("Refreshing file");
+//!     Ok(())
+//! })?;
+//!
+//! // File never refreshes automatically
+//! let file = cache_file.open()?;
+//! let file = cache_file.open()?;
+//! let file = cache_file.open()?;
+//! // ...
+//!
+//! // Manual refresh when needed
+//! cache_file.force_refresh()?;
+//! # Ok(())
+//! # }
+//! ```
+//!
 //! # License
 //!
 //! This crate is licensed under the MIT License.
