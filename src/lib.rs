@@ -827,7 +827,7 @@ impl InnerDirCache {
         let path = path.as_ref();
 
         // Ensure the path does not end with a slash
-        if path.to_str().map(|path| path.ends_with("/")).unwrap_or_default() {
+        if path.to_str().is_some_and(|path| path.ends_with('/')) {
             let path = path.to_path_buf();
             let error = Error::InvalidPath { path };
             return Err(error);
@@ -840,10 +840,7 @@ impl InnerDirCache {
             Error::InvalidPath { path }
         })?;
         let file_name = if let Component::Normal(name) = file_name
-            && name
-                .to_str()
-                .map(|file_name| file_name.trim() != "") // Ensure the path is not empty or just whitespace
-                .unwrap_or_default()
+            && name.to_str().is_some_and(|file_name| file_name.trim() != "")
         {
             name
         } else {
