@@ -10,16 +10,16 @@ fn main() -> anyhow::Result<()> {
     println!("Cache directory: {}", cache.path().display());
 
     // Create a file in the specified directory
-    let file = cache.get("data.txt", |mut file| {
+    let cache_file = cache.get("data.txt", |mut file| {
         file.write_all(FILE_CONTENT.as_bytes())?;
         Ok(())
     })?;
 
-    println!("File created at: {}", file.path().display());
+    println!("File created at: {}", cache_file.path().display());
 
     // Read content back
     let mut content = String::new();
-    file.open()?.read_to_string(&mut content)?;
+    cache_file.open()?.read_to_string(&mut content)?;
     println!("File content: {content}");
 
     // Verify content

@@ -11,8 +11,8 @@
 //! # fn wrapper() -> fcache::Result<()> {
 //! // Create a cache and use it
 //! let cache = fcache::new()?;
-//! let file = cache.get("example.txt", |mut f| {
-//!     f.write_all(b"Hello, prelude!")?;
+//! let cache_file = cache.get("example.txt", |mut file| {
+//!     file.write_all(b"Hello, prelude!")?;
 //!     Ok(())
 //! })?;
 //! # Ok(())

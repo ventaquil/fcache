@@ -21,16 +21,16 @@ use crate::result::{Error, Result};
 /// let cache = Cache::new()?;
 ///
 /// // Create a lazy file that won't be created until accessed
-/// let cached_file = cache.get_lazy("data.txt", |mut file| {
+/// let cache_file = cache.get_lazy("data.txt", |mut file| {
 ///     file.write_all(b"Lazy file content")?;
 ///     Ok(())
 /// })?;
 ///
 /// // File doesn't exist yet on disk
-/// assert!(!cached_file.path().exists());
+/// assert!(!cache_file.path().exists());
 ///
 /// // Opening the file triggers its creation
-/// let mut file = cached_file.open()?;
+/// let mut file = cache_file.open()?;
 /// // Read data from the file
 /// let mut content = String::new();
 /// file.read_to_string(&mut content)?;
@@ -94,8 +94,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -135,8 +135,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -177,8 +177,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut f| {
-    ///     f.write_all(b"config data")?;
+    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -206,8 +206,8 @@ impl<'a> CacheLazyFile<'a> {
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
     /// let lazy_file = cache
-    ///     .get_lazy("data.txt", |mut f| {
-    ///         f.write_all(b"content")?;
+    ///     .get_lazy("data.txt", |mut file| {
+    ///         file.write_all(b"content")?;
     ///         Ok(())
     ///     })?
     ///     .with_refresh_interval(Duration::from_secs(300));
@@ -233,8 +233,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let mut lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -260,8 +260,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let mut lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -286,8 +286,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -321,8 +321,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -350,8 +350,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -385,8 +385,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("shared.txt", |mut f| {
-    ///     f.write_all(b"shared data")?;
+    /// let mut lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -420,8 +420,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("shared.txt", |mut f| {
-    ///     f.write_all(b"shared data")?;
+    /// let mut lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -455,8 +455,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("document.txt", |mut f| {
-    ///     f.write_all(b"Document content")?;
+    /// let lazy_file = cache.get_lazy("document.txt", |mut file| {
+    ///     file.write_all(b"Document content")?;
     ///     Ok(())
     /// })?;
     ///
@@ -493,8 +493,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut f| {
-    ///     f.write_all(b"config data")?;
+    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -530,8 +530,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("cache.txt", |mut f| {
-    ///     f.write_all(b"cached data")?;
+    /// let lazy_file = cache.get_lazy("cache.txt", |mut file| {
+    ///     file.write_all(b"cached data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -560,8 +560,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"fresh data")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"fresh data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -594,8 +594,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("temp.txt", |mut f| {
-    ///     f.write_all(b"temporary data")?;
+    /// let lazy_file = cache.get_lazy("temp.txt", |mut file| {
+    ///     file.write_all(b"temporary data")?;
     ///     Ok(())
     /// })?;
     ///
@@ -639,8 +639,8 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("settings.txt", |mut f| {
-    ///     f.write_all(b"default settings")?;
+    /// let lazy_file = cache.get_lazy("settings.txt", |mut file| {
+    ///     file.write_all(b"default settings")?;
     ///     Ok(())
     /// })?;
     ///
@@ -697,8 +697,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -726,8 +726,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -755,8 +755,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("settings.txt", |mut f| {
-    ///     f.write_all(b"settings data")?;
+    /// let lazy_file = cache.get_lazy("settings.txt", |mut file| {
+    ///     file.write_all(b"settings data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -785,8 +785,8 @@ impl CacheFile<'_> {
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
     /// let lazy_file = cache
-    ///     .get_lazy("data.txt", |mut f| {
-    ///         f.write_all(b"content")?;
+    ///     .get_lazy("data.txt", |mut file| {
+    ///         file.write_all(b"content")?;
     ///         Ok(())
     ///     })?
     ///     .with_refresh_interval(Duration::from_secs(600));
@@ -813,8 +813,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     /// let mut cache_file = lazy_file.init()?;
@@ -841,8 +841,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     /// let mut cache_file = lazy_file.init()?;
@@ -869,8 +869,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut f| {
-    ///     f.write_all(b"config data")?;
+    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -900,8 +900,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"cached data")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"cached data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -931,8 +931,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"content")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -961,8 +961,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("shared.txt", |mut f| {
-    ///     f.write_all(b"shared data")?;
+    /// let lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
     /// let mut cache_file = lazy_file.init()?;
@@ -992,8 +992,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("shared.txt", |mut f| {
-    ///     f.write_all(b"shared data")?;
+    /// let lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
     /// let mut cache_file = lazy_file.init()?;
@@ -1025,8 +1025,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut f| {
-    ///     f.write_all(b"config data")?;
+    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -1058,8 +1058,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("cache.txt", |mut f| {
-    ///     f.write_all(b"cached data")?;
+    /// let lazy_file = cache.get_lazy("cache.txt", |mut file| {
+    ///     file.write_all(b"cached data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -1089,8 +1089,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut f| {
-    ///     f.write_all(b"fresh data")?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"fresh data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;
@@ -1118,8 +1118,8 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("temp.txt", |mut f| {
-    ///     f.write_all(b"temporary data")?;
+    /// let lazy_file = cache.get_lazy("temp.txt", |mut file| {
+    ///     file.write_all(b"temporary data")?;
     ///     Ok(())
     /// })?;
     /// let cache_file = lazy_file.init()?;

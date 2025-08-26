@@ -10,13 +10,13 @@ fn main() -> anyhow::Result<()> {
         let cache = fcache::new()?;
         println!("Default refresh interval: {:?}", cache.refresh_interval());
 
-        let file = cache.get("default.txt", |mut file| {
+        let cache_file = cache.get("default.txt", |mut file| {
             file.write_all(FILE_CONTENT.as_bytes())?;
             Ok(())
         })?;
 
         let mut content = String::new();
-        file.open()?.read_to_string(&mut content)?;
+        cache_file.open()?.read_to_string(&mut content)?;
         println!("Default file content: {content}");
     }
 
@@ -27,13 +27,13 @@ fn main() -> anyhow::Result<()> {
         let cache = fcache::new()?.with_refresh_interval(Duration::from_secs(30));
         println!("Custom refresh interval: {:?}", cache.refresh_interval());
 
-        let file = cache.get("custom.txt", |mut file| {
+        let cache_file = cache.get("custom.txt", |mut file| {
             file.write_all(FILE_CONTENT.as_bytes())?;
             Ok(())
         })?;
 
         let mut content = String::new();
-        file.open()?.read_to_string(&mut content)?;
+        cache_file.open()?.read_to_string(&mut content)?;
         println!("Custom file content: {content}");
     }
 
@@ -46,13 +46,13 @@ fn main() -> anyhow::Result<()> {
             .with_default_refresh_interval(); // Reset to default
         println!("Reset to default: {:?}", cache.refresh_interval());
 
-        let file = cache.get("reset.txt", |mut file| {
+        let cache_file = cache.get("reset.txt", |mut file| {
             file.write_all(FILE_CONTENT.as_bytes())?;
             Ok(())
         })?;
 
         let mut content = String::new();
-        file.open()?.read_to_string(&mut content)?;
+        cache_file.open()?.read_to_string(&mut content)?;
         println!("Reset file content: {content}");
     }
 

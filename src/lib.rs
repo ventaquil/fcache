@@ -34,7 +34,7 @@
 //! let cache = fcache::new()?;
 //!
 //! // Get or create a cached file
-//! let cached_file = cache.get("hello.txt", |mut file| {
+//! let cache_file = cache.get("hello.txt", |mut file| {
 //!     // Write data to the file
 //!     file.write_all(b"Hello, world!")?;
 //!     Ok(())
@@ -42,7 +42,7 @@
 //! // File is created and can be used...
 //!
 //! // Open the cached file
-//! let mut file = cached_file.open()?;
+//! let mut file = cache_file.open()?;
 //!
 //! // Read the content of the file
 //! let mut content = String::new();
@@ -63,7 +63,7 @@
 //! let cache = fcache::with_dir("/path/to/cache")?;
 //!
 //! // Get or create a cached file
-//! let cached_file = cache.get("hello.txt", |mut file| {
+//! let cache_file = cache.get("hello.txt", |mut file| {
 //!     // Write data to the file
 //!     file.write_all(b"Hello, world!")?;
 //!     Ok(())
@@ -71,7 +71,7 @@
 //! // File is created and can be used...
 //!
 //! // Open the cached file
-//! let mut file = cached_file.open()?;
+//! let mut file = cache_file.open()?;
 //!
 //! // Read the content of the file
 //! let mut content = String::new();
@@ -96,7 +96,7 @@
 //! let cache = fcache::new()?;
 //!
 //! // Get or create a lazy cached file
-//! let cached_file = cache.get_lazy("hello.txt", |mut file| {
+//! let cache_file = cache.get_lazy("hello.txt", |mut file| {
 //!     // Write data to the file
 //!     file.write_all(b"Hello, world!")?;
 //!     Ok(())
@@ -104,7 +104,7 @@
 //! // File isn't created until opened...
 //!
 //! // Open the cached file
-//! let mut file = cached_file.open()?; // File is created here
+//! let mut file = cache_file.open()?; // File is created here
 //!
 //! // Read the content of the file
 //! let mut content = String::new();
@@ -129,20 +129,20 @@
 //! let cache = fcache::new()?;
 //!
 //! // Create a file with initial content
-//! let cached_file = cache.get("data.txt", |mut file| {
+//! let cache_file = cache.get("data.txt", |mut file| {
 //!     file.write_all(b"Initial content")?;
 //!     Ok(())
 //! })?;
 //!
 //! // Force refresh the file with new content
-//! let cached_file = cache.get("data.txt", |mut file| {
+//! let cache_file = cache.get("data.txt", |mut file| {
 //!     file.write_all(b"Updated content")?;
 //!     Ok(())
 //! })?;
-//! cached_file.force_refresh()?;
+//! cache_file.force_refresh()?;
 //!
 //! // The file now contains the updated content
-//! let mut file = cached_file.open()?;
+//! let mut file = cache_file.open()?;
 //! let mut content = String::new();
 //! file.read_to_string(&mut content)?;
 //! assert_eq!(content, "Updated content");
@@ -166,7 +166,7 @@
 //! let cache = fcache::new()?;
 //!
 //! // Get or create a cached file
-//! let mut cached_file = cache.get("hello.txt", |mut file| {
+//! let mut cache_file = cache.get("hello.txt", |mut file| {
 //!     // Write data to the file
 //!     file.write_all(b"Hello, world!")?;
 //!     Ok(())
@@ -174,12 +174,12 @@
 //! // File is created and can be used...
 //!
 //! // Lock the file to prevent refreshing
-//! cached_file.lock()?; // Lock the file to prevent refreshing
+//! cache_file.lock()?; // Lock the file to prevent refreshing
 //!
 //! // Perform operations on the file
 //!
 //! // Unlock the file to allow refreshing
-//! cached_file.unlock()?; // Unlock the file to allow refreshing
+//! cache_file.unlock()?; // Unlock the file to allow refreshing
 //!
 //! // ...
 //! # Ok(())
@@ -206,14 +206,14 @@
 //!         let cache = Arc::clone(&cache);
 //!         thread::spawn(move || {
 //!             // Each thread can safely create files in the cache
-//!             let file = cache.get(&format!("thread_{}.txt", i), move |mut f| {
-//!                 f.write_all(format!("Content from thread {}", i).as_bytes())?;
+//!             let cache_file = cache.get(&format!("thread_{}.txt", i), move |mut file| {
+//!                 file.write_all(format!("Content from thread {}", i).as_bytes())?;
 //!                 Ok(())
 //!             })?;
 //!
 //!             // And read from them
 //!             let mut content = String::new();
-//!             file.open()?.read_to_string(&mut content)?;
+//!             cache_file.open()?.read_to_string(&mut content)?;
 //!             println!("Thread {}: {}", i, content);
 //!
 //!             Ok::<(), fcache::Error>(())
@@ -542,7 +542,7 @@ impl Cache {
     /// let cache = Cache::new()?;
     ///
     /// // Get or create a cached file
-    /// let cached_file = cache.get("example.txt", |mut file| {
+    /// let cache_file = cache.get("example.txt", |mut file| {
     ///     // Write data to the file
     ///     file.write_all(b"Hello, Cache!")?;
     ///     Ok(())
@@ -550,7 +550,7 @@ impl Cache {
     /// // File is created and can be used...
     ///
     /// // Open the cached file
-    /// let mut file = cached_file.open()?;
+    /// let mut file = cache_file.open()?;
     /// // Read data from the file
     /// let mut contents = String::new();
     /// file.read_to_string(&mut contents)?;
@@ -579,17 +579,17 @@ impl Cache {
     /// let cache = Cache::new()?;
     ///
     /// // Get or create a lazy cached file
-    /// let cached_file = cache.get_lazy("lazy_file.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("lazy_file.txt", |mut file| {
     ///     // Write data to the file
     ///     file.write_all(b"Hello, Lazy Cache!")?;
     ///     Ok(())
     /// })?;
     ///
     /// // File isn't created until opened...
-    /// assert!(!cached_file.path().exists());
+    /// assert!(!cache_file.path().exists());
     ///
     /// // Open the lazy cached file
-    /// let mut file = cached_file.open()?;
+    /// let mut file = cache_file.open()?;
     /// // Read data from the file
     /// let mut contents = String::new();
     /// file.read_to_string(&mut contents)?;
