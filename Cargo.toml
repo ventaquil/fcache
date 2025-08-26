@@ -5,6 +5,7 @@ authors = ["Konrad Goławski <konrad@golawski.it>"]
 edition = "2024"
 rust-version = "1.88.0"
 description = "File caching library with lazy creation, automatic refresh, and callback-based initialization"
+readme = ".cargo/README.md"
 repository = "https://github.com/ventaquil/fcache"
 license = "MIT"
 keywords = ["cache"]
