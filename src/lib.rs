@@ -835,14 +835,11 @@ impl InnerDirCache {
 
         // Ensure the absolute path is within the cache directory to prevent path traversal attacks
         let mut components = path.components();
-        let file_name = components.next_back().ok_or_else(|| {
-            let path = path.to_path_buf();
-            Error::InvalidPath { path }
-        })?;
-        let file_name = if let Component::Normal(name) = file_name
-            && name.to_str().is_some_and(|file_name| file_name.trim() != "")
+        let file_name = if let Some(component) = components.next_back()
+            && let Component::Normal(file_name) = component
+            && file_name.to_str().is_some_and(|file_name| file_name.trim() != "")
         {
-            name
+            file_name
         } else {
             let path = path.to_path_buf();
             let error = Error::InvalidPath { path };

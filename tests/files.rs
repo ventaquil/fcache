@@ -13,6 +13,12 @@ fn test_get_file() -> anyhow::Result<()> {
         Ok(())
     })?;
 
+    // Verify file name matches
+    assert_eq!(cache_file.name(), "file.txt");
+
+    // Verify file path ends with name
+    assert!(cache_file.path().ends_with(cache_file.name()));
+
     // Verify file exists on disk
     assert!(cache_file.path().exists());
 
@@ -34,6 +40,12 @@ fn test_get_lazy_file() -> anyhow::Result<()> {
         file.write_all(TEST_CONTENT)?;
         Ok(())
     })?;
+
+    // Verify file name matches
+    assert_eq!(cache_file.name(), "file.txt");
+
+    // Verify file path ends with name
+    assert!(cache_file.path().ends_with(cache_file.name()));
 
     // Verify file doesn't exist yet
     assert!(!cache_file.path().exists());
@@ -200,6 +212,12 @@ fn test_nested_file_removal() -> anyhow::Result<()> {
 
     // Create a file in the cache
     let cache_file = cache.get("a/b/c/d/file.txt", |_| Ok(()))?;
+
+    // Verify file name matches
+    assert_eq!(cache_file.name(), "file.txt");
+
+    // Verify file path ends with name
+    assert!(cache_file.path().ends_with(cache_file.name()));
 
     // Create a file
     let _ = cache.get("a/b/c/file.txt", |_| Ok(()))?;

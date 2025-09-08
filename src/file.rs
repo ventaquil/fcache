@@ -1,6 +1,6 @@
 use std::fmt::{self, Debug};
 use std::fs::{self, File};
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
 use crate::callback::CallbackFn;
@@ -41,6 +41,8 @@ use crate::result::{Error, Result};
 pub struct CacheLazyFile<'a> {
     /// Path to the lazy file
     path: PathBuf,
+    /// Name of the lazy file
+    name: String,
     /// Callback function to initialize the file
     callback: Box<dyn CallbackFn>,
     /// Refresh interval for the file
@@ -63,6 +65,17 @@ impl<'a> CacheLazyFile<'a> {
         cache_refresh_interval: &'a Duration,
     ) -> Result<Self> {
         let path = path.as_ref();
+        let name = if let Some(component) = path.components().next_back()
+            && let Component::Normal(name) = component
+            && let Some(name) = name.to_str()
+            && name.trim() != ""
+        {
+            name.to_string()
+        } else {
+            let path = path.to_path_buf();
+            let error = Error::InvalidPath { path };
+            return Err(error);
+        };
         (!path.exists())
             .then(|| {
                 let callback = Box::new(callback);
@@ -70,6 +83,7 @@ impl<'a> CacheLazyFile<'a> {
                 let locked = false;
                 Self {
                     path,
+                    name,
                     callback,
                     refresh_interval,
                     cache_root,
@@ -108,6 +122,7 @@ impl<'a> CacheLazyFile<'a> {
     pub fn with_refresh_interval(self, refresh_interval: Duration) -> Self {
         let Self {
             path,
+            name,
             callback,
             cache_root,
             cache_refresh_interval,
@@ -116,6 +131,7 @@ impl<'a> CacheLazyFile<'a> {
         } = self;
         Self {
             path,
+            name,
             callback,
             refresh_interval,
             cache_root,
@@ -151,6 +167,7 @@ impl<'a> CacheLazyFile<'a> {
     pub fn with_default_refresh_interval(self) -> Self {
         let Self {
             path,
+            name,
             callback,
             cache_root,
             cache_refresh_interval,
@@ -160,6 +177,7 @@ impl<'a> CacheLazyFile<'a> {
         let refresh_interval = *cache_refresh_interval;
         Self {
             path,
+            name,
             callback,
             refresh_interval,
             cache_root,
@@ -192,6 +210,32 @@ impl<'a> CacheLazyFile<'a> {
     pub fn path(&self) -> &Path {
         let Self { path, .. } = self;
         path
+    }
+
+    /// Returns the name of the lazy file.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use fcache::prelude::*;
+    ///
+    /// # fn wrapper() -> fcache::Result<()> {
+    /// let cache = fcache::new()?;
+    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    ///     file.write_all(b"config data")?;
+    ///     Ok(())
+    /// })?;
+    ///
+    /// // Get the file name
+    /// let name = lazy_file.name();
+    /// println!("File name: {}", name);
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[must_use]
+    pub fn name(&self) -> &str {
+        let Self { name, .. } = self;
+        name
     }
 
     /// Returns the refresh interval of the lazy file.
@@ -771,6 +815,33 @@ impl CacheFile<'_> {
     pub fn path(&self) -> &Path {
         let Self(inner) = self;
         inner.path()
+    }
+
+    /// Returns the name of the file.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use fcache::prelude::*;
+    ///
+    /// # fn wrapper() -> fcache::Result<()> {
+    /// let cache = fcache::new()?;
+    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    ///     file.write_all(b"content")?;
+    ///     Ok(())
+    /// })?;
+    /// let cache_file = lazy_file.init()?;
+    ///
+    /// // Get the file name
+    /// let name = cache_file.name();
+    /// println!("Cache file name: {}", name);
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[must_use]
+    pub fn name(&self) -> &str {
+        let Self(inner) = self;
+        inner.name()
     }
 
     /// Returns the refresh interval of the file.
