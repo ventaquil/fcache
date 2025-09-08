@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `name()` method to cache files for retrieving the file name.
 
+### Fixed
+
+- Cache file name convention in documentation examples.
+
 ## [0.0.1] - 2025-08-29
 
 ### Added

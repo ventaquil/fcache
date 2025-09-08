@@ -108,13 +108,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Set custom refresh interval to 30 minutes
-    /// let lazy_file = lazy_file.with_refresh_interval(Duration::from_secs(30 * 60));
+    /// let cache_file = cache_file.with_refresh_interval(Duration::from_secs(30 * 60));
     /// # Ok(())
     /// # }
     /// ```
@@ -151,13 +151,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Set custom interval, then reset to default
-    /// let lazy_file = lazy_file
+    /// let cache_file = cache_file
     ///     .with_refresh_interval(Duration::from_secs(60))
     ///     .with_default_refresh_interval();
     /// # Ok(())
@@ -195,13 +195,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("config.txt", |mut file| {
     ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Get the file path
-    /// let path = lazy_file.path();
+    /// let path = cache_file.path();
     /// println!("File will be created at: {}", path.display());
     /// # Ok(())
     /// # }
@@ -221,13 +221,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("config.txt", |mut file| {
     ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Get the file name
-    /// let name = lazy_file.name();
+    /// let name = cache_file.name();
     /// println!("File name: {}", name);
     /// # Ok(())
     /// # }
@@ -249,7 +249,7 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache
+    /// let cache_file = cache
     ///     .get_lazy("data.txt", |mut file| {
     ///         file.write_all(b"content")?;
     ///         Ok(())
@@ -257,7 +257,7 @@ impl<'a> CacheLazyFile<'a> {
     ///     .with_refresh_interval(Duration::from_secs(300));
     ///
     /// // Check the current refresh interval
-    /// let interval = lazy_file.refresh_interval();
+    /// let interval = cache_file.refresh_interval();
     /// println!("Refresh interval: {} seconds", interval.as_secs());
     /// # Ok(())
     /// # }
@@ -277,15 +277,15 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let mut cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Check if the file is locked
-    /// assert!(!lazy_file.is_locked());
-    /// lazy_file.lock()?;
-    /// assert!(lazy_file.is_locked());
+    /// assert!(!cache_file.is_locked());
+    /// cache_file.lock()?;
+    /// assert!(cache_file.is_locked());
     /// # Ok(())
     /// # }
     /// ```
@@ -304,15 +304,15 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let mut cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Check if the file is unlocked
-    /// assert!(lazy_file.is_unlocked());
-    /// lazy_file.lock()?;
-    /// assert!(!lazy_file.is_unlocked());
+    /// assert!(cache_file.is_unlocked());
+    /// cache_file.lock()?;
+    /// assert!(!cache_file.is_unlocked());
     /// # Ok(())
     /// # }
     /// ```
@@ -330,13 +330,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Check if the file is still valid
-    /// if lazy_file.is_valid()? {
+    /// if cache_file.is_valid()? {
     ///     println!("File is still fresh");
     /// }
     /// # Ok(())
@@ -365,13 +365,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Check if the file needs refreshing
-    /// if lazy_file.is_invalid()? {
+    /// if cache_file.is_invalid()? {
     ///     println!("File needs to be refreshed");
     /// }
     /// # Ok(())
@@ -394,13 +394,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Get when the file will expire
-    /// let valid_until = lazy_file.valid_until()?;
+    /// let valid_until = cache_file.valid_until()?;
     /// println!("File valid until: {:?}", valid_until);
     /// # Ok(())
     /// # }
@@ -429,15 +429,15 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    /// let mut cache_file = cache.get_lazy("shared.txt", |mut file| {
     ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Lock the file to prevent concurrent access
-    /// lazy_file.lock()?;
+    /// cache_file.lock()?;
     /// // ... perform critical operations ...
-    /// lazy_file.unlock()?;
+    /// cache_file.unlock()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -464,15 +464,15 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let mut lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    /// let mut cache_file = cache.get_lazy("shared.txt", |mut file| {
     ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Lock and then unlock the file
-    /// lazy_file.lock()?;
+    /// cache_file.lock()?;
     /// // ... critical operations complete ...
-    /// lazy_file.unlock()?;
+    /// cache_file.unlock()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -499,13 +499,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("document.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("document.txt", |mut file| {
     ///     file.write_all(b"Document content")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Explicitly create the file if it doesn't exist
-    /// let file = lazy_file.create()?;
+    /// let file = cache_file.create()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -537,13 +537,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("config.txt", |mut file| {
     ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Open and read the file content
-    /// let mut file = lazy_file.open()?;
+    /// let mut file = cache_file.open()?;
     /// let mut content = String::new();
     /// file.read_to_string(&mut content)?;
     /// # Ok(())
@@ -574,13 +574,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("cache.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("cache.txt", |mut file| {
     ///     file.write_all(b"cached data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Refresh only if the file is invalid
-    /// lazy_file.refresh()?;
+    /// cache_file.refresh()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -604,13 +604,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("data.txt", |mut file| {
     ///     file.write_all(b"fresh data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Force refresh regardless of validity
-    /// lazy_file.force_refresh()?;
+    /// cache_file.force_refresh()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -638,16 +638,16 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("temp.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("temp.txt", |mut file| {
     ///     file.write_all(b"temporary data")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Create the file first
-    /// lazy_file.open()?;
+    /// cache_file.open()?;
     ///
     /// // Remove the file when no longer needed
-    /// lazy_file.remove()?;
+    /// cache_file.remove()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -683,13 +683,13 @@ impl<'a> CacheLazyFile<'a> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("settings.txt", |mut file| {
+    /// let cache_file = cache.get_lazy("settings.txt", |mut file| {
     ///     file.write_all(b"default settings")?;
     ///     Ok(())
     /// })?;
     ///
     /// // Initialize and convert to CacheFile
-    /// let cache_file = lazy_file.init()?;
+    /// let cache_file = cache_file.init()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -741,11 +741,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Set custom refresh interval to 10 minutes
     /// let cache_file = cache_file.with_refresh_interval(Duration::from_secs(10 * 60));
@@ -770,11 +769,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Set custom interval, then reset to default
     /// let cache_file = cache_file
@@ -799,11 +797,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("settings.txt", |mut file| {
+    /// let cache_file = cache.get("settings.txt", |mut file| {
     ///     file.write_all(b"settings data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Get the file path
     /// let path = cache_file.path();
@@ -826,11 +823,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Get the file name
     /// let name = cache_file.name();
@@ -855,13 +851,12 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache
-    ///     .get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache
+    ///     .get("data.txt", |mut file| {
     ///         file.write_all(b"content")?;
     ///         Ok(())
     ///     })?
     ///     .with_refresh_interval(Duration::from_secs(600));
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Check the current refresh interval
     /// let interval = cache_file.refresh_interval();
@@ -884,11 +879,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let mut cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
-    /// let mut cache_file = lazy_file.init()?;
     ///
     /// // Check if the file is locked
     /// assert!(!cache_file.is_locked());
@@ -912,11 +906,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let mut cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
-    /// let mut cache_file = lazy_file.init()?;
     ///
     /// // Check if the file is unlocked
     /// assert!(cache_file.is_unlocked());
@@ -940,11 +933,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    /// let cache_file = cache.get("config.txt", |mut file| {
     ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Check if the cache file is still valid
     /// if cache_file.is_valid()? {
@@ -971,11 +963,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"cached data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Check if the cache file needs refreshing
     /// if cache_file.is_invalid()? {
@@ -1002,11 +993,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"content")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Get when the file will expire
     /// let valid_until = cache_file.valid_until()?;
@@ -1032,11 +1022,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    /// let mut cache_file = cache.get("shared.txt", |mut file| {
     ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
-    /// let mut cache_file = lazy_file.init()?;
     ///
     /// // Lock the file to prevent concurrent access
     /// cache_file.lock()?;
@@ -1063,11 +1052,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("shared.txt", |mut file| {
+    /// let mut cache_file = cache.get("shared.txt", |mut file| {
     ///     file.write_all(b"shared data")?;
     ///     Ok(())
     /// })?;
-    /// let mut cache_file = lazy_file.init()?;
     ///
     /// // Lock and then unlock the file
     /// cache_file.lock()?;
@@ -1096,11 +1084,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("config.txt", |mut file| {
+    /// let cache_file = cache.get("config.txt", |mut file| {
     ///     file.write_all(b"config data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Open and read the file content
     /// let mut file = cache_file.open()?;
@@ -1129,11 +1116,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("cache.txt", |mut file| {
+    /// let cache_file = cache.get("cache.txt", |mut file| {
     ///     file.write_all(b"cached data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Refresh only if the file is invalid
     /// cache_file.refresh()?;
@@ -1160,11 +1146,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("data.txt", |mut file| {
+    /// let cache_file = cache.get("data.txt", |mut file| {
     ///     file.write_all(b"fresh data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Force refresh regardless of validity
     /// cache_file.force_refresh()?;
@@ -1189,11 +1174,10 @@ impl CacheFile<'_> {
     ///
     /// # fn wrapper() -> fcache::Result<()> {
     /// let cache = fcache::new()?;
-    /// let lazy_file = cache.get_lazy("temp.txt", |mut file| {
+    /// let cache_file = cache.get("temp.txt", |mut file| {
     ///     file.write_all(b"temporary data")?;
     ///     Ok(())
     /// })?;
-    /// let cache_file = lazy_file.init()?;
     ///
     /// // Remove the file when no longer needed
     /// cache_file.remove()?;
@@ -1212,13 +1196,13 @@ impl CacheFile<'_> {
 
 impl Debug for CacheFile<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let Self(lazy_file) = self;
+        let Self(inner) = self;
         let CacheLazyFile {
             path,
             refresh_interval,
             locked,
             ..
-        } = lazy_file;
+        } = inner;
         f.debug_struct("File")
             .field("path", &path)
             .field("callback", &"...")
