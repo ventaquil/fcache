@@ -629,7 +629,7 @@ impl Cache {
     /// # Errors
     ///
     /// This function will return an error if the file already exists, file creation fails due to permissions or disk space, the callback function returns an error, path traversal is detected outside the cache directory, or parent directory creation fails.
-    pub fn get(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'_>> {
+    pub fn get<'a>(&'a self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'a>> {
         let Self(inner) = self;
         inner.get(path, callback)
     }
@@ -668,7 +668,11 @@ impl Cache {
     /// # Errors
     ///
     /// This function will return an error if the file already exists, path traversal is detected outside the cache directory, parent directory creation fails, or there are issues with path resolution or filesystem operations.
-    pub fn get_lazy(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheLazyFile<'_>> {
+    pub fn get_lazy<'a>(
+        &'a self,
+        path: impl AsRef<Path>,
+        callback: impl CallbackFn + 'static,
+    ) -> Result<CacheLazyFile<'a>> {
         let Self(inner) = self;
         inner.get_lazy(path, callback)
     }
@@ -738,7 +742,7 @@ impl InnerCache {
     }
 
     /// Creates a file in the cache using a callback for initialization.
-    fn get(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'_>> {
+    fn get<'a>(&'a self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'a>> {
         match self {
             Self::Dir(dir_cache) => dir_cache.get(path, callback),
             Self::Temp(temp_cache) => temp_cache.get(path, callback),
@@ -746,7 +750,11 @@ impl InnerCache {
     }
 
     /// Creates a file in the cache that is lazily created when accessed.
-    fn get_lazy(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheLazyFile<'_>> {
+    fn get_lazy<'a>(
+        &'a self,
+        path: impl AsRef<Path>,
+        callback: impl CallbackFn + 'static,
+    ) -> Result<CacheLazyFile<'a>> {
         match self {
             Self::Dir(dir_cache) => dir_cache.get_lazy(path, callback),
             Self::Temp(temp_cache) => temp_cache.get_lazy(path, callback),
@@ -817,12 +825,16 @@ impl InnerDirCache {
     }
 
     /// Creates a file in the cache using a callback for initialization.
-    fn get(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'_>> {
+    fn get<'a>(&'a self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'a>> {
         self.get_lazy(path, callback)?.init()
     }
 
     /// Creates a file in the cache that is lazily created when accessed.
-    fn get_lazy(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheLazyFile<'_>> {
+    fn get_lazy<'a>(
+        &'a self,
+        path: impl AsRef<Path>,
+        callback: impl CallbackFn + 'static,
+    ) -> Result<CacheLazyFile<'a>> {
         let Self { root, refresh_interval } = self;
         let path = path.as_ref();
 
@@ -912,13 +924,17 @@ impl InnerTempCache {
     }
 
     /// Creates a file in the cache using a callback for initialization.
-    fn get(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'_>> {
+    fn get<'a>(&'a self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheFile<'a>> {
         let Self { dir_cache, .. } = self;
         dir_cache.get(path, callback)
     }
 
     /// Creates a file in the cache that is lazily created when accessed.
-    fn get_lazy(&self, path: impl AsRef<Path>, callback: impl CallbackFn + 'static) -> Result<CacheLazyFile<'_>> {
+    fn get_lazy<'a>(
+        &'a self,
+        path: impl AsRef<Path>,
+        callback: impl CallbackFn + 'static,
+    ) -> Result<CacheLazyFile<'a>> {
         let Self { dir_cache, .. } = self;
         dir_cache.get_lazy(path, callback)
     }
