@@ -13,7 +13,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! fcache = "0.1.0"
+//! fcache = "0.2.0"
 //! ```
 //!
 //! Alternatively, you can use the [`cargo add`](https://doc.rust-lang.org/cargo/commands/cargo-add.html) subcommand:

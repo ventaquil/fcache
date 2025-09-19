@@ -1,6 +1,6 @@
 [package]
 name = "fcache"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Konrad Goławski <konrad@golawski.it>"]
 edition = "2024"
 rust-version = "1.88.0"
