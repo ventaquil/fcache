@@ -3,7 +3,7 @@
 [![crates.io](https://img.shields.io/crates/v/fcache.svg?style=flat-square)](https://crates.io/crates/fcache)
 [![Build](https://img.shields.io/github/actions/workflow/status/ventaquil/fcache/rust.yml?branch=master&style=flat-square&logo=github)](https://github.com/ventaquil/fcache/actions/workflows/rust.yml)
 [![docs.rs](https://img.shields.io/docsrs/fcache?style=flat-square&logo=docsdotrs)](https://docs.rs/fcache/)
-[![MSRV](https://img.shields.io/badge/MSRV-1.88.0-informational?style=flat-square)](https://github.com/ventaquil/fcache/blob/master/Cargo.toml)
+[![MSRV](https://img.shields.io/crates/msrv/fcache?style=flat-square)](https://github.com/ventaquil/fcache/blob/master/Cargo.toml)
 [![unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg?style=flat-square)](https://github.com/rust-secure-code/safety-dance)
 [![LICENSE](https://img.shields.io/github/license/ventaquil/fcache?style=flat-square)](https://github.com/ventaquil/fcache/blob/master/LICENSE)
 
